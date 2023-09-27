@@ -1,5 +1,5 @@
-﻿using FitnessApp.ProfileApi.Enums;
-using System;
+﻿using System;
+using FitnessApp.ProfileApi.Enums;
 
 namespace FitnessApp.ProfileApi.Contracts.Output
 {

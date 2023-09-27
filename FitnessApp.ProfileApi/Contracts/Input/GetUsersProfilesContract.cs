@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace FitnessApp.ProfileApi.Contracts.Input
+﻿namespace FitnessApp.ProfileApi.Contracts.Input
 {
     public class GetUsersProfilesContract
     {
-        public IEnumerable<string> UsersIds { get; set; }
+        public string[] UsersIds { get; set; }
     }
 }

@@ -1,15 +1,12 @@
-﻿using FitnessApp.Abstractions.Db.Repository.Base;
-using FitnessApp.Abstractions.Db.Entities.Base;
-using FitnessApp.Abstractions.Models.Base;
+﻿using FitnessApp.Common.Abstractions.Db.Repository.Generic;
+using FitnessApp.ProfileApi.Data.Entities;
+using FitnessApp.ProfileApi.Models.Input;
+using FitnessApp.ProfileApi.Models.Output;
 
 namespace FitnessApp.ProfileApi.Data
 {
-    public interface IUserProfileRepository<Entity, Model, CreateModel, UpdateModel>
-        : IGenericRepository<Entity, Model, CreateModel, UpdateModel>
-        where Entity : IEntity
-        where Model : ISearchableModel
-        where CreateModel : ICreateModel
-        where UpdateModel : IUpdateModel
+    public interface IUserProfileRepository
+        : IGenericRepository<UserProfileGenericEntity, UserProfileGenericModel, CreateUserProfileGenericModel, UpdateUserProfileGenericModel>
     {
     }
 }

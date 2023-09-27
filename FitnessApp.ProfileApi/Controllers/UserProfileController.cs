@@ -1,46 +1,43 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using AutoMapper;
+using FitnessApp.ProfileApi.Contracts.Input;
+using FitnessApp.ProfileApi.Contracts.Output;
+using FitnessApp.ProfileApi.Models.Input;
+using FitnessApp.ProfileApi.Services.UserProfileAggregator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Http;
-using System.Net;
-using FitnessApp.ProfileApi.Services.UserProfile;
-using FitnessApp.ProfileApi.Contracts.Output;
-using FitnessApp.ProfileApi.Contracts.Input;
-using FitnessApp.ProfileApi.Models.Input;
-using FitnessApp.ProfileApi.Data.Entities;
-using FitnessApp.ProfileApi.Models.Output;
-using System.Collections.Generic;
-using FitnessApp.Serializer.JsonMapper;
 
 namespace FitnessApp.ProfileApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    [Authorize]
+
+    // [Authorize]
     public class UserProfileController : Controller
     {
-        private readonly IUserProfileService<UserProfile, UserProfileModel, GetUsersProfilesModel, CreateUserProfileModel, UpdateUserProfileModel> _userProfileService;
-        private readonly IJsonMapper _mapper;
+        private readonly IUserProfileAggregatorService _userProfileAggregatorService;
+        private readonly IMapper _mapper;
 
-        public UserProfileController
-        (
-            IUserProfileService<UserProfile, UserProfileModel, GetUsersProfilesModel, CreateUserProfileModel, UpdateUserProfileModel> userProfileService, 
-            IJsonMapper mapper
-        )
+        public UserProfileController(
+            IUserProfileAggregatorService userProfileAggregatorService,
+            IMapper mapper)
         {
-            _userProfileService = userProfileService;
+            _userProfileAggregatorService = userProfileAggregatorService;
             _mapper = mapper;
         }
 
-        [HttpGet("GetUserProfiles")]
-        public async Task<IActionResult> GetUserProfilesAsync([FromBody]GetUserProfilesContract contract)
+        [HttpPost("GetUserProfiles")]
+        public async Task<IActionResult> GetUserProfiles([FromBody]GetUserProfilesContract contract)
         {
-            var model = _mapper.Convert<GetUsersProfilesModel>(contract);
-            var response = await _userProfileService.GetItemsAsync(model);
+            var response = await _userProfileAggregatorService.GetUsersProfiles(
+                contract.Search,
+                entity => true);
             if (response != null)
             {
-                var result = _mapper.Convert<IEnumerable<UserProfileContract>>(response);
+                var result = _mapper.Map<IEnumerable<UserProfileContract>>(response);
                 return Ok(result);
             }
             else
@@ -49,14 +46,13 @@ namespace FitnessApp.ProfileApi.Controllers
             }
         }
 
-        [HttpGet("GetUsersProfiles")]
-        public async Task<IActionResult> GetUsersProfilesAsync([FromBody]GetUsersProfilesContract contract)
+        [HttpPost("GetUsersProfiles")]
+        public async Task<IActionResult> GetUsersProfiles([FromBody]GetUsersProfilesContract contract)
         {
-            var model = _mapper.Convert<GetUsersProfilesModel>(contract);
-            var response = await _userProfileService.GetUsersProfilesAsync(model);
+            var response = await _userProfileAggregatorService.GetUsersProfiles(contract.UsersIds);
             if (response != null)
             {
-                var result = _mapper.Convert<IEnumerable<UserProfileContract>>(response);
+                var result = _mapper.Map<IEnumerable<UserProfileContract>>(response);
                 return Ok(result);
             }
             else
@@ -66,12 +62,12 @@ namespace FitnessApp.ProfileApi.Controllers
         }
 
         [HttpGet("GetUserProfile/{userId}")]
-        public async Task<IActionResult> GetUserProfileAsync([FromRoute] string userId)
+        public async Task<IActionResult> GetUserProfile([FromRoute] string userId)
         {
-            var response = await _userProfileService.GetItemByUserIdAsync(userId);
+            var response = await _userProfileAggregatorService.GetUserProfile(userId);
             if (response != null)
             {
-                var result = _mapper.Convert<UserProfileContract>(response);
+                var result = _mapper.Map<UserProfileContract>(response);
                 return Ok(result);
             }
             else
@@ -81,13 +77,13 @@ namespace FitnessApp.ProfileApi.Controllers
         }
 
         [HttpPost("CreateUserProfile")]
-        public async Task<IActionResult> CreateUserProfileAsync([FromBody]CreateUserProfileContract contract)
+        public async Task<IActionResult> CreateUserProfile([FromBody]CreateUserProfileContract contract)
         {
-            var model = _mapper.Convert<CreateUserProfileModel>(contract);
-            var created = await _userProfileService.CreateItemAsync(model);
+            var model = _mapper.Map<CreateUserProfileGenericBlobAggregatorModel>(contract);
+            var created = await _userProfileAggregatorService.CreateUserProfile(model);
             if (created != null)
             {
-                var result = _mapper.Convert<UserProfileContract>(created);
+                var result = _mapper.Map<UserProfileContract>(created);
                 return Ok(result);
             }
             else
@@ -99,11 +95,11 @@ namespace FitnessApp.ProfileApi.Controllers
         [HttpPut("UpdateUserProfile")]
         public async Task<IActionResult> UpdateUserProfileAsync([FromBody]UpdateUserProfileContract contract)
         {
-            var model = _mapper.Convert<UpdateUserProfileModel>(contract);
-            var updated = await _userProfileService.UpdateItemAsync(model);
+            var model = _mapper.Map<UpdateUserProfileGenericBlobAggregatorModel>(contract);
+            var updated = await _userProfileAggregatorService.UpdateUserProfile(model);
             if (updated != null)
             {
-                var result = _mapper.Convert<UserProfileContract>(updated);
+                var result = _mapper.Map<UserProfileContract>(updated);
                 return Ok(result);
             }
             else
@@ -115,7 +111,7 @@ namespace FitnessApp.ProfileApi.Controllers
         [HttpDelete("DeleteUserProfile/{userId}")]
         public async Task<IActionResult> DeleteUserProfileAsync([FromRoute] string userId)
         {
-            var deleted = await _userProfileService.DeleteItemAsync(userId);
+            var deleted = await _userProfileAggregatorService.DeleteUserProfile(userId);
             if (deleted != null)
             {
                 return Ok(deleted);

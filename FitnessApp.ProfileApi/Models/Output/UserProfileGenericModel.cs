@@ -1,9 +1,10 @@
 ﻿using System;
+using FitnessApp.Common.Abstractions.Models.Generic;
 using FitnessApp.ProfileApi.Enums;
 
-namespace FitnessApp.ProfileApi.Contracts.Input
+namespace FitnessApp.ProfileApi.Models.Output
 {
-    public class CreateUserProfileContract
+    public class UserProfileGenericModel : IGenericModel
     {
         public string UserId { get; set; }
         public string Email { get; set; }
@@ -15,8 +16,5 @@ namespace FitnessApp.ProfileApi.Contracts.Input
         public Gender Gender { get; set; }
         public string About { get; set; }
         public string Language { get; set; }
-        public string BackgroundPhoto { get; set; }
-        public string CroppedProfilePhoto { get; set; }
-        public string OriginalProfilePhoto { get; set; }
     }
 }

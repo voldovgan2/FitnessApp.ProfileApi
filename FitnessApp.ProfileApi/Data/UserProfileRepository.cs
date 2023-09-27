@@ -1,38 +1,20 @@
-﻿using FitnessApp.Serializer.JsonMapper;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+﻿using AutoMapper;
+using FitnessApp.Common.Abstractions.Db.DbContext;
+using FitnessApp.Common.Abstractions.Db.Repository.Generic;
+using FitnessApp.ProfileApi.Data.Entities;
 using FitnessApp.ProfileApi.Models.Input;
-using System.Linq;
-using System;
-using FitnessApp.Logger;
-using FitnessApp.Abstractions.Db.Repository.Base;
-using FitnessApp.Abstractions.Db.Entities.Base;
-using FitnessApp.Abstractions.Models.Base;
-using FitnessApp.Abstractions.Db.Configuration;
+using FitnessApp.ProfileApi.Models.Output;
 
 namespace FitnessApp.ProfileApi.Data
 {
-    public class UserProfileRepository<Entity, Model, CreateModel, UpdateModel>
-        : GenericRepository<Entity, Model, CreateModel, UpdateModel>
-        , IUserProfileRepository<Entity, Model, CreateModel, UpdateModel>
-        where Entity : IEntity
-        where Model : ISearchableModel
-        where CreateModel : ICreateModel
-        where UpdateModel : IUpdateModel
+    public class UserProfileRepository
+        : GenericRepository<UserProfileGenericEntity, UserProfileGenericModel, CreateUserProfileGenericModel, UpdateUserProfileGenericModel>,
+        IUserProfileRepository
     {
-        private readonly ILogger<UserProfileRepository<Entity, Model, CreateModel, UpdateModel>> _log;
-
-        public UserProfileRepository
-        (
-            IOptions<MongoDbSettings> settings, 
-            IJsonMapper mapper, 
-            ILogger<UserProfileRepository<Entity, Model, CreateModel, UpdateModel>> log
-        )
-            : base(settings, mapper, log)
-        {  
-
-        }
+        public UserProfileRepository(
+            IDbContext<UserProfileGenericEntity> dbContext,
+            IMapper mapper)
+            : base(dbContext, mapper)
+        { }
     }
 }

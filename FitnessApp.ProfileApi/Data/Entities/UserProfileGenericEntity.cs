@@ -1,10 +1,13 @@
 ﻿using System;
+using FitnessApp.Common.Abstractions.Db.Entities.Generic;
 using FitnessApp.ProfileApi.Enums;
+using MongoDB.Bson.Serialization.Attributes;
 
-namespace FitnessApp.ProfileApi.Contracts.Input
+namespace FitnessApp.ProfileApi.Data.Entities
 {
-    public class CreateUserProfileContract
+    public class UserProfileGenericEntity : IGenericEntity
     {
+        [BsonId]
         public string UserId { get; set; }
         public string Email { get; set; }
         public string FirstName { get; set; }
@@ -15,8 +18,6 @@ namespace FitnessApp.ProfileApi.Contracts.Input
         public Gender Gender { get; set; }
         public string About { get; set; }
         public string Language { get; set; }
-        public string BackgroundPhoto { get; set; }
-        public string CroppedProfilePhoto { get; set; }
-        public string OriginalProfilePhoto { get; set; }
+        public string Partition { get; set; }
     }
 }
