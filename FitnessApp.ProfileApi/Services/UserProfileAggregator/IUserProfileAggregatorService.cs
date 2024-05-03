@@ -10,11 +10,11 @@ namespace FitnessApp.ProfileApi.Services.UserProfileAggregator
 {
     public interface IUserProfileAggregatorService
     {
-        Task<UserProfileGenericBlobAggregatorModel> GetUserProfile(string userId);
-        Task<IEnumerable<UserProfileGenericBlobAggregatorModel>> GetUsersProfiles(string[] ids);
-        Task<IEnumerable<UserProfileGenericBlobAggregatorModel>> GetUsersProfiles(string search, Expression<Func<UserProfileGenericEntity, bool>> predicate);
-        Task<UserProfileGenericBlobAggregatorModel> CreateUserProfile(CreateUserProfileGenericBlobAggregatorModel model);
-        Task<UserProfileGenericBlobAggregatorModel> UpdateUserProfile(UpdateUserProfileGenericBlobAggregatorModel model);
+        Task<UserProfileGenericFileAggregatorModel> GetUserProfile(string userId);
+        Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string[] ids);
+        Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string search, Expression<Func<UserProfileGenericEntity, bool>> predicate);
+        Task<UserProfileGenericFileAggregatorModel> CreateUserProfile(CreateUserProfileGenericFileAggregatorModel model);
+        Task<UserProfileGenericFileAggregatorModel> UpdateUserProfile(UpdateUserProfileGenericFileAggregatorModel model);
         Task<string> DeleteUserProfile(string userId);
     }
 }

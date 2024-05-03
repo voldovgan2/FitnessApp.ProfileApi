@@ -38,7 +38,7 @@ namespace FitnessApp.ProfileApi.Data
                 var adminProfile = await repository.GetUserProfileAsync(adminId);
                 if (adminProfile == null)
                 {
-                    await repository.CreateUserProfileAsync(CreateGenericBlobAggregatorUserProfileModel.Default(adminId, adminEmail, true));
+                    await repository.CreateUserProfileAsync(CreateGenericFileAggregatorUserProfileModel.Default(adminId, adminEmail, true));
                 }
             }
             */

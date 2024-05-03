@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using FitnessApp.Common.Abstractions.Models.BlobImage;
+using FitnessApp.Common.Abstractions.Models.FileImage;
 using FitnessApp.ProfileApi.Contracts.Input;
 using FitnessApp.ProfileApi.Contracts.Output;
 using FitnessApp.ProfileApi.Data.Entities;
@@ -14,40 +14,40 @@ namespace FitnessApp.ProfileApi
     {
         public MappingProfile()
         {
-            #region Contract 2 GenericBlobAggregatorModel
-            CreateMap<CreateUserProfileContract, CreateUserProfileGenericBlobAggregatorModel>()
-                .ForMember(m => m.Images, c => c.MapFrom(c => new List<BlobImageModel>
+            #region Contract 2 GenericFileAggregatorModel
+            CreateMap<CreateUserProfileContract, CreateUserProfileGenericFileAggregatorModel>()
+                .ForMember(m => m.Images, c => c.MapFrom(c => new List<FileImageModel>
                 {
-                    new BlobImageModel
+                    new()
                     {
                         FieldName = "BackgroundPhoto",
                         Value = c.BackgroundPhoto
                     },
-                    new BlobImageModel
+                    new()
                     {
                         FieldName = "CroppedProfilePhoto",
                         Value = c.CroppedProfilePhoto
                     },
-                    new BlobImageModel
+                    new()
                     {
                         FieldName = "OriginalProfilePhoto",
                         Value = c.OriginalProfilePhoto
                     }
                 }));
-            CreateMap<UpdateUserProfileContract, UpdateUserProfileGenericBlobAggregatorModel>()
-                .ForMember(m => m.Images, c => c.MapFrom(c => new List<BlobImageModel>
+            CreateMap<UpdateUserProfileContract, UpdateUserProfileGenericFileAggregatorModel>()
+                .ForMember(m => m.Images, c => c.MapFrom(c => new List<FileImageModel>
                 {
-                    new BlobImageModel
+                    new()
                     {
                         FieldName = "BackgroundPhoto",
                         Value = c.BackgroundPhoto
                     },
-                    new BlobImageModel
+                    new()
                     {
                         FieldName = "CroppedProfilePhoto",
                         Value = c.CroppedProfilePhoto
                     },
-                    new BlobImageModel
+                    new()
                     {
                         FieldName = "OriginalProfilePhoto",
                         Value = c.OriginalProfilePhoto
@@ -55,9 +55,9 @@ namespace FitnessApp.ProfileApi
                 }));
             #endregion
 
-            #region GenericBlobAggregatorModel 2 GenericModel
-            CreateMap<CreateUserProfileGenericBlobAggregatorModel, CreateUserProfileGenericModel>();
-            CreateMap<UpdateUserProfileGenericBlobAggregatorModel, UpdateUserProfileGenericModel>();
+            #region GenericFileAggregatorModel 2 GenericModel
+            CreateMap<CreateUserProfileGenericFileAggregatorModel, CreateUserProfileGenericModel>();
+            CreateMap<UpdateUserProfileGenericFileAggregatorModel, UpdateUserProfileGenericModel>();
             #endregion
 
             #region GenericModel 2 GenericEntity
@@ -70,8 +70,8 @@ namespace FitnessApp.ProfileApi
             CreateMap<UserProfileGenericEntity, UserProfileGenericModel>();
             #endregion
 
-            #region GenericBlobAggregatorModel 2 Contract
-            CreateMap<UserProfileGenericBlobAggregatorModel, UserProfileContract>()
+            #region GenericFileAggregatorModel 2 Contract
+            CreateMap<UserProfileGenericFileAggregatorModel, UserProfileContract>()
                 .ForMember(c => c.UserId, m => m.MapFrom(m => m.Model.UserId))
                 .ForMember(c => c.Email, m => m.MapFrom(m => m.Model.Email))
                 .ForMember(c => c.FirstName, m => m.MapFrom(m => m.Model.FirstName))
@@ -82,13 +82,13 @@ namespace FitnessApp.ProfileApi
                 .ForMember(c => c.Gender, m => m.MapFrom(m => m.Model.Gender))
                 .ForMember(c => c.About, m => m.MapFrom(m => m.Model.About))
                 .ForMember(c => c.Language, m => m.MapFrom(m => m.Model.Language))
-                .ForMember(c => c.BackgroundPhoto, m => m.MapFrom(m => MapBlobField(nameof(UserProfileContract.BackgroundPhoto), m)))
-                .ForMember(c => c.CroppedProfilePhoto, m => m.MapFrom(m => MapBlobField(nameof(UserProfileContract.CroppedProfilePhoto), m)))
-                .ForMember(c => c.OriginalProfilePhoto, m => m.MapFrom(m => MapBlobField(nameof(UserProfileContract.OriginalProfilePhoto), m)));
+                .ForMember(c => c.BackgroundPhoto, m => m.MapFrom(m => MapFileField(nameof(UserProfileContract.BackgroundPhoto), m)))
+                .ForMember(c => c.CroppedProfilePhoto, m => m.MapFrom(m => MapFileField(nameof(UserProfileContract.CroppedProfilePhoto), m)))
+                .ForMember(c => c.OriginalProfilePhoto, m => m.MapFrom(m => MapFileField(nameof(UserProfileContract.OriginalProfilePhoto), m)));
             #endregion
         }
 
-        private static string MapBlobField(string fieldName, UserProfileGenericBlobAggregatorModel model)
+        private static string MapFileField(string fieldName, UserProfileGenericFileAggregatorModel model)
         {
             var result = model.Images.SingleOrDefault(i => i.FieldName == fieldName)?.Value;
             return result;

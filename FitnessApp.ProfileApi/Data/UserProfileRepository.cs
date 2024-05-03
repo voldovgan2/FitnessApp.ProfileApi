@@ -7,14 +7,10 @@ using FitnessApp.ProfileApi.Models.Output;
 
 namespace FitnessApp.ProfileApi.Data
 {
-    public class UserProfileRepository
-        : GenericRepository<UserProfileGenericEntity, UserProfileGenericModel, CreateUserProfileGenericModel, UpdateUserProfileGenericModel>,
-        IUserProfileRepository
-    {
-        public UserProfileRepository(
-            IDbContext<UserProfileGenericEntity> dbContext,
-            IMapper mapper)
-            : base(dbContext, mapper)
-        { }
-    }
+    public class UserProfileRepository(IDbContext<UserProfileGenericEntity> dbContext, IMapper mapper) : GenericRepository<
+        UserProfileGenericEntity,
+        UserProfileGenericModel,
+        CreateUserProfileGenericModel,
+        UpdateUserProfileGenericModel>(dbContext, mapper),
+        IUserProfileRepository;
 }

@@ -4,8 +4,8 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using FitnessApp.Common.Abstractions.Services.Configuration;
-using FitnessApp.Common.Abstractions.Services.GenericBlobAggregator;
-using FitnessApp.Common.Blob;
+using FitnessApp.Common.Abstractions.Services.GenericFileAggregator;
+using FitnessApp.Common.Files;
 using FitnessApp.ProfileApi.Data.Entities;
 using FitnessApp.ProfileApi.Models.Input;
 using FitnessApp.ProfileApi.Models.Output;
@@ -14,43 +14,45 @@ using Microsoft.Extensions.Options;
 
 namespace FitnessApp.ProfileApi.Services.UserProfileAggregator
 {
-    public class UserProfileAggregatorService
-        : GenericBlobAggregatorService<UserProfileGenericEntity, UserProfileGenericBlobAggregatorModel, UserProfileGenericModel, CreateUserProfileGenericBlobAggregatorModel, CreateUserProfileGenericModel, UpdateUserProfileGenericBlobAggregatorModel, UpdateUserProfileGenericModel>,
-        IUserProfileAggregatorService
+    public class UserProfileAggregatorService(
+        IUserProfileGenericService userProfileService,
+        IFilesService filesService,
+        IMapper mapper,
+        IOptions<GenericFileAggregatorSettings> genericFileAggregatorSettings) : GenericFileAggregatorService<
+            UserProfileGenericEntity,
+            UserProfileGenericFileAggregatorModel,
+            UserProfileGenericModel,
+            CreateUserProfileGenericFileAggregatorModel,
+            CreateUserProfileGenericModel,
+            UpdateUserProfileGenericFileAggregatorModel,
+            UpdateUserProfileGenericModel>(userProfileService, filesService, mapper, genericFileAggregatorSettings.Value),
+            IUserProfileAggregatorService
     {
-        public UserProfileAggregatorService(
-            IUserProfileGenericService userProfileService,
-            IBlobService blobService,
-            IMapper mapper,
-            IOptions<GenericBlobAggregatorSettings> genericBlobAggregatorSettings)
-            : base(userProfileService, blobService, mapper, genericBlobAggregatorSettings.Value)
-        { }
-
-        public Task<UserProfileGenericBlobAggregatorModel> GetUserProfile(string userId)
+        public Task<UserProfileGenericFileAggregatorModel> GetUserProfile(string userId)
         {
             return GetItem(userId);
         }
 
-        public async Task<IEnumerable<UserProfileGenericBlobAggregatorModel>> GetUsersProfiles(string[] ids)
+        public async Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string[] ids)
         {
-            return !ids.Any() ?
-                Enumerable.Empty<UserProfileGenericBlobAggregatorModel>()
+            return ids.Length == 0 ?
+                Enumerable.Empty<UserProfileGenericFileAggregatorModel>()
                 : await GetItems(ids);
         }
 
-        public Task<IEnumerable<UserProfileGenericBlobAggregatorModel>> GetUsersProfiles(
+        public Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(
             string search,
             Expression<System.Func<UserProfileGenericEntity, bool>> predicate)
         {
             return GetItems(search, predicate);
         }
 
-        public Task<UserProfileGenericBlobAggregatorModel> CreateUserProfile(CreateUserProfileGenericBlobAggregatorModel model)
+        public Task<UserProfileGenericFileAggregatorModel> CreateUserProfile(CreateUserProfileGenericFileAggregatorModel model)
         {
             return CreateItem(model);
         }
 
-        public Task<UserProfileGenericBlobAggregatorModel> UpdateUserProfile(UpdateUserProfileGenericBlobAggregatorModel model)
+        public Task<UserProfileGenericFileAggregatorModel> UpdateUserProfile(UpdateUserProfileGenericFileAggregatorModel model)
         {
             return UpdateItem(model);
         }

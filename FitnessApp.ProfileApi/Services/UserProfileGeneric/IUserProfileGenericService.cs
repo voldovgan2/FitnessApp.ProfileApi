@@ -5,8 +5,9 @@ using FitnessApp.ProfileApi.Models.Output;
 
 namespace FitnessApp.ProfileApi.Services.UserProfileGeneric
 {
-    public interface IUserProfileGenericService
-        : IGenericService<UserProfileGenericEntity, UserProfileGenericModel, CreateUserProfileGenericModel, UpdateUserProfileGenericModel>
-    {
-    }
+    public interface IUserProfileGenericService : IGenericService<
+        UserProfileGenericEntity,
+        UserProfileGenericModel,
+        CreateUserProfileGenericModel,
+        UpdateUserProfileGenericModel>;
 }

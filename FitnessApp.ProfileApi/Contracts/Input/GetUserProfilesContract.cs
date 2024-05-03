@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FitnessApp.ProfileApi.Contracts.Input
+﻿namespace FitnessApp.ProfileApi.Contracts.Input
 {
     public class GetUserProfilesContract
     {

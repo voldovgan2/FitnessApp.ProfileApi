@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using FitnessApp.ProfileApi.Contracts.Input;
@@ -15,111 +14,53 @@ namespace FitnessApp.ProfileApi.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
 
-    // [Authorize]
-    public class UserProfileController : Controller
+    [Authorize]
+    public class UserProfileController(IUserProfileAggregatorService userProfileAggregatorService, IMapper mapper) : Controller
     {
-        private readonly IUserProfileAggregatorService _userProfileAggregatorService;
-        private readonly IMapper _mapper;
-
-        public UserProfileController(
-            IUserProfileAggregatorService userProfileAggregatorService,
-            IMapper mapper)
-        {
-            _userProfileAggregatorService = userProfileAggregatorService;
-            _mapper = mapper;
-        }
-
         [HttpPost("GetUserProfiles")]
-        public async Task<IActionResult> GetUserProfiles([FromBody]GetUserProfilesContract contract)
+        public async Task<IEnumerable<UserProfileContract>> GetUserProfiles([FromBody]GetUserProfilesContract contract)
         {
-            var response = await _userProfileAggregatorService.GetUsersProfiles(
+            var response = await userProfileAggregatorService.GetUsersProfiles(
                 contract.Search,
                 entity => true);
-            if (response != null)
-            {
-                var result = _mapper.Map<IEnumerable<UserProfileContract>>(response);
-                return Ok(result);
-            }
-            else
-            {
-                return NoContent();
-            }
+            return mapper.Map<IEnumerable<UserProfileContract>>(response);
         }
 
         [HttpPost("GetUsersProfiles")]
-        public async Task<IActionResult> GetUsersProfiles([FromBody]GetUsersProfilesContract contract)
+        public async Task<IEnumerable<UserProfileContract>> GetUsersProfiles([FromBody]GetUsersProfilesContract contract)
         {
-            var response = await _userProfileAggregatorService.GetUsersProfiles(contract.UsersIds);
-            if (response != null)
-            {
-                var result = _mapper.Map<IEnumerable<UserProfileContract>>(response);
-                return Ok(result);
-            }
-            else
-            {
-                return NoContent();
-            }
+            var response = await userProfileAggregatorService.GetUsersProfiles(contract.UsersIds);
+            return mapper.Map<IEnumerable<UserProfileContract>>(response);
         }
 
         [HttpGet("GetUserProfile/{userId}")]
-        public async Task<IActionResult> GetUserProfile([FromRoute] string userId)
+        public async Task<UserProfileContract> GetUserProfile([FromRoute] string userId)
         {
-            var response = await _userProfileAggregatorService.GetUserProfile(userId);
-            if (response != null)
-            {
-                var result = _mapper.Map<UserProfileContract>(response);
-                return Ok(result);
-            }
-            else
-            {
-                return NoContent();
-            }
+            var response = await userProfileAggregatorService.GetUserProfile(userId);
+            return mapper.Map<UserProfileContract>(response);
         }
 
         [HttpPost("CreateUserProfile")]
-        public async Task<IActionResult> CreateUserProfile([FromBody]CreateUserProfileContract contract)
+        public async Task<UserProfileContract> CreateUserProfile([FromBody]CreateUserProfileContract contract)
         {
-            var model = _mapper.Map<CreateUserProfileGenericBlobAggregatorModel>(contract);
-            var created = await _userProfileAggregatorService.CreateUserProfile(model);
-            if (created != null)
-            {
-                var result = _mapper.Map<UserProfileContract>(created);
-                return Ok(result);
-            }
-            else
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
+            var model = mapper.Map<CreateUserProfileGenericFileAggregatorModel>(contract);
+            var response = await userProfileAggregatorService.CreateUserProfile(model);
+            return mapper.Map<UserProfileContract>(response);
         }
 
         [HttpPut("UpdateUserProfile")]
-        public async Task<IActionResult> UpdateUserProfileAsync([FromBody]UpdateUserProfileContract contract)
+        public async Task<UserProfileContract> UpdateUserProfileAsync([FromBody]UpdateUserProfileContract contract)
         {
-            var model = _mapper.Map<UpdateUserProfileGenericBlobAggregatorModel>(contract);
-            var updated = await _userProfileAggregatorService.UpdateUserProfile(model);
-            if (updated != null)
-            {
-                var result = _mapper.Map<UserProfileContract>(updated);
-                return Ok(result);
-            }
-            else
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
+            var model = mapper.Map<UpdateUserProfileGenericFileAggregatorModel>(contract);
+            var response = await userProfileAggregatorService.UpdateUserProfile(model);
+            return mapper.Map<UserProfileContract>(response);
         }
 
         [HttpDelete("DeleteUserProfile/{userId}")]
-        public async Task<IActionResult> DeleteUserProfileAsync([FromRoute] string userId)
+        public async Task<string> DeleteUserProfileAsync([FromRoute] string userId)
         {
-            var deleted = await _userProfileAggregatorService.DeleteUserProfile(userId);
-            if (deleted != null)
-            {
-                return Ok(deleted);
-            }
-            else
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
+            var response = await userProfileAggregatorService.DeleteUserProfile(userId);
+            return response;
         }
     }
 }

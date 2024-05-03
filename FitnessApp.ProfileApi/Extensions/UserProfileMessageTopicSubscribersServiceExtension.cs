@@ -1,9 +1,8 @@
 ﻿using System;
 using FitnessApp.Common.Serializer.JsonSerializer;
+using FitnessApp.Common.ServiceBus.Nats.Services;
 using FitnessApp.ProfileApi.Services.MessageBus;
 using FitnessApp.ProfileApi.Services.UserProfileAggregator;
-using FitnessApp.ServiceBus.AzureServiceBus.TopicSubscribers;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FitnessApp.ProfileApi.Extensions
@@ -12,16 +11,14 @@ namespace FitnessApp.ProfileApi.Extensions
     {
         public static IServiceCollection AddUserProfileMessageTopicSubscribersService(this IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
+            ArgumentNullException.ThrowIfNull(services);
 
-            services.AddTransient<ITopicSubscribers, UserProfileMessageTopicSubscribersService>(
+            services.AddTransient(
                 sp =>
                 {
-                    var configuration = sp.GetRequiredService<IConfiguration>();
-                    var subscription = configuration.GetValue<string>("ServiceBusSubscriptionName");
                     return new UserProfileMessageTopicSubscribersService(
+                        sp.GetRequiredService<IServiceBus>(),
                         sp.GetRequiredService<IUserProfileAggregatorService>().CreateUserProfile,
-                        subscription,
                         sp.GetRequiredService<IJsonSerializer>()
                     );
                 }
