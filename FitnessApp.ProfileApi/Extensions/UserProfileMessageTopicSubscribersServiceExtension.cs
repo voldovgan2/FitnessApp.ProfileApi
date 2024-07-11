@@ -1,5 +1,4 @@
 ﻿using System;
-using FitnessApp.Common.Serializer.JsonSerializer;
 using FitnessApp.Common.ServiceBus.Nats.Services;
 using FitnessApp.ProfileApi.Services.MessageBus;
 using FitnessApp.ProfileApi.Services.UserProfileAggregator;
@@ -18,9 +17,7 @@ namespace FitnessApp.ProfileApi.Extensions
                 {
                     return new UserProfileMessageTopicSubscribersService(
                         sp.GetRequiredService<IServiceBus>(),
-                        sp.GetRequiredService<IUserProfileAggregatorService>().CreateUserProfile,
-                        sp.GetRequiredService<IJsonSerializer>()
-                    );
+                        sp.GetRequiredService<IUserProfileAggregatorService>().CreateUserProfile);
                 }
             );
 
