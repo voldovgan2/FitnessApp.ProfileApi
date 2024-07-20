@@ -6,15 +6,14 @@ using FitnessApp.ProfileApi.Data.Entities;
 using FitnessApp.ProfileApi.Models.Input;
 using FitnessApp.ProfileApi.Models.Output;
 
-namespace FitnessApp.ProfileApi.Services.UserProfileAggregator
+namespace FitnessApp.ProfileApi.Services.UserProfileAggregator;
+
+public interface IUserProfileAggregatorService
 {
-    public interface IUserProfileAggregatorService
-    {
-        Task<UserProfileGenericFileAggregatorModel> GetUserProfile(string userId);
-        Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string[] ids);
-        Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string search, Expression<Func<UserProfileGenericEntity, bool>> predicate);
-        Task<UserProfileGenericFileAggregatorModel> CreateUserProfile(CreateUserProfileGenericFileAggregatorModel model);
-        Task<UserProfileGenericFileAggregatorModel> UpdateUserProfile(UpdateUserProfileGenericFileAggregatorModel model);
-        Task<string> DeleteUserProfile(string userId);
-    }
+    Task<UserProfileGenericFileAggregatorModel> GetUserProfile(string userId);
+    Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string[] ids);
+    Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string search, Expression<Func<UserProfileGenericEntity, bool>> predicate);
+    Task<UserProfileGenericFileAggregatorModel> CreateUserProfile(CreateUserProfileGenericFileAggregatorModel model);
+    Task<UserProfileGenericFileAggregatorModel> UpdateUserProfile(UpdateUserProfileGenericFileAggregatorModel model);
+    Task<string> DeleteUserProfile(string userId);
 }

@@ -1,8 +1,7 @@
-﻿namespace FitnessApp.ProfileApi.Enums
+﻿namespace FitnessApp.ProfileApi.Enums;
+
+public enum Gender
 {
-    public enum Gender
-    {
-        Male,
-        Famele
-    }
+    Male,
+    Famele
 }

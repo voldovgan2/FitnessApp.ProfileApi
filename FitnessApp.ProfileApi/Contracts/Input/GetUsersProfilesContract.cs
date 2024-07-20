@@ -1,7 +1,6 @@
-﻿namespace FitnessApp.ProfileApi.Contracts.Input
+﻿namespace FitnessApp.ProfileApi.Contracts.Input;
+
+public class GetUsersProfilesContract
 {
-    public class GetUsersProfilesContract
-    {
-        public string[] UsersIds { get; set; }
-    }
+    public string[] UsersIds { get; set; }
 }

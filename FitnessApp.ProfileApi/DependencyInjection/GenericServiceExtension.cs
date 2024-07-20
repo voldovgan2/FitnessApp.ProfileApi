@@ -5,19 +5,18 @@ using FitnessApp.ProfileApi.Services.UserProfileGeneric;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FitnessApp.ProfileApi.DependencyInjection
+namespace FitnessApp.ProfileApi.DependencyInjection;
+
+public static class GenericServiceExtension
 {
-    public static class GenericServiceExtension
+    public static IServiceCollection ConfigureGenericServices(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection ConfigureGenericServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
-            services.Configure<GenericFileAggregatorSettings>(configuration.GetSection("GenericFileAggregatorSettings"));
-            services.AddTransient<IUserProfileGenericService, UserProfileGenericService>();
-            services.AddTransient<IUserProfileAggregatorService, UserProfileAggregatorService>();
+        services.Configure<GenericFileAggregatorSettings>(configuration.GetSection("GenericFileAggregatorSettings"));
+        services.AddTransient<IUserProfileGenericService, UserProfileGenericService>();
+        services.AddTransient<IUserProfileAggregatorService, UserProfileAggregatorService>();
 
-            return services;
-        }
+        return services;
     }
 }

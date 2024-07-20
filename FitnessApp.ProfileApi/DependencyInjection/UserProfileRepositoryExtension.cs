@@ -5,26 +5,25 @@ using FitnessApp.ProfileApi.Data;
 using FitnessApp.ProfileApi.Data.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FitnessApp.ProfileApi.DependencyInjection
+namespace FitnessApp.ProfileApi.DependencyInjection;
+
+public static class UserProfileRepositoryExtension
 {
-    public static class UserProfileRepositoryExtension
+    public static IServiceCollection ConfigureUserProfileRepository(this IServiceCollection services)
     {
-        public static IServiceCollection ConfigureUserProfileRepository(this IServiceCollection services)
-        {
-            ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(services);
 
-            services.AddTransient<IDbContext<UserProfileGenericEntity>, DbContext<UserProfileGenericEntity>>();
-            services.AddTransient<IUserProfileRepository, UserProfileRepository>(
-                sp =>
-                {
-                    return new UserProfileRepository(
-                        sp.GetRequiredService<IDbContext<UserProfileGenericEntity>>(),
-                        sp.GetRequiredService<IMapper>()
-                    );
-                }
-            );
+        services.AddTransient<IDbContext<UserProfileGenericEntity>, DbContext<UserProfileGenericEntity>>();
+        services.AddTransient<IUserProfileRepository, UserProfileRepository>(
+            sp =>
+            {
+                return new UserProfileRepository(
+                    sp.GetRequiredService<IDbContext<UserProfileGenericEntity>>(),
+                    sp.GetRequiredService<IMapper>()
+                );
+            }
+        );
 
-            return services;
-        }
+        return services;
     }
 }
