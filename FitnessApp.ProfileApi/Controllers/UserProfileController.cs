@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using FitnessApp.Common.Abstractions.Controllers;
 using FitnessApp.ProfileApi.Contracts.Input;
 using FitnessApp.ProfileApi.Contracts.Output;
 using FitnessApp.ProfileApi.Models.Input;
 using FitnessApp.ProfileApi.Services.UserProfileAggregator;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FitnessApp.ProfileApi.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-[Produces("application/json")]
-
-[Authorize]
-public class UserProfileController(IUserProfileAggregatorService userProfileAggregatorService, IMapper mapper) : Controller
+public class UserProfileController(IUserProfileAggregatorService userProfileAggregatorService, IMapper mapper) : FitnessAppBaseController
 {
     [HttpPost("GetUserProfiles")]
     public async Task<IEnumerable<UserProfileContract>> GetUserProfiles([FromBody]GetUserProfilesContract contract)
