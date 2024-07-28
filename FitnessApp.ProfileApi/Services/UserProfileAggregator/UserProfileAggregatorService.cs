@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using FitnessApp.Common.Abstractions.Services.Configuration;
 using FitnessApp.Common.Abstractions.Services.GenericFileAggregator;
 using FitnessApp.Common.Files;
-using FitnessApp.ProfileApi.Data.Entities;
+using FitnessApp.Common.Paged.Extensions;
+using FitnessApp.Common.Paged.Models.Output;
 using FitnessApp.ProfileApi.Models.Input;
 using FitnessApp.ProfileApi.Models.Output;
 using FitnessApp.ProfileApi.Services.UserProfileGeneric;
@@ -20,7 +19,6 @@ public class UserProfileAggregatorService(
     IMapper mapper,
     IOptions<GenericFileAggregatorSettings> genericFileAggregatorSettings) :
     GenericFileAggregatorService<
-        UserProfileGenericEntity,
         UserProfileGenericFileAggregatorModel,
         UserProfileGenericModel,
         CreateUserProfileGenericFileAggregatorModel,
@@ -35,21 +33,18 @@ public class UserProfileAggregatorService(
 {
     public Task<UserProfileGenericFileAggregatorModel> GetUserProfile(string userId)
     {
-        return GetItem(userId);
+        return GetItemByUserId(userId);
     }
 
-    public async Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(string[] ids)
+    public async Task<PagedDataModel<UserProfileGenericFileAggregatorModel>> GetUsersProfilesByIds(GetUsersProfilesByIdsModel model)
     {
-        return ids.Length == 0 ?
-            Enumerable.Empty<UserProfileGenericFileAggregatorModel>()
-            : await GetItems(ids);
+        return (await GetItemsByIds(model.UsersIds)).ToPaged(model);
     }
 
-    public Task<IEnumerable<UserProfileGenericFileAggregatorModel>> GetUsersProfiles(
-        string search,
-        Expression<System.Func<UserProfileGenericEntity, bool>> predicate)
+    public async Task<PagedDataModel<UserProfileGenericFileAggregatorModel>> FilterUserProfiles(GetUserProfilesModel model)
     {
-        return GetItems(search, predicate);
+        var models = await userProfileService.FilterUserProfiles(model);
+        return (await LoadAndComposeGenericFileAggregatorModels(models)).ToPaged(model);
     }
 
     public Task<UserProfileGenericFileAggregatorModel> CreateUserProfile(CreateUserProfileGenericFileAggregatorModel model)

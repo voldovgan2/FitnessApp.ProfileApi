@@ -2,6 +2,8 @@
 using System.Linq;
 using AutoMapper;
 using FitnessApp.Common.Abstractions.Models.FileImage;
+using FitnessApp.Common.Paged.Contracts.Output;
+using FitnessApp.Common.Paged.Models.Output;
 using FitnessApp.ProfileApi.Contracts.Input;
 using FitnessApp.ProfileApi.Contracts.Output;
 using FitnessApp.ProfileApi.Data.Entities;
@@ -53,6 +55,8 @@ public class MappingProfile : Profile
                     Value = c.OriginalProfilePhoto
                 }
             }));
+        CreateMap<GetUserProfilesContract, GetUserProfilesModel>();
+        CreateMap<GetUsersProfilesByIdsContract, GetUsersProfilesByIdsModel>();
         #endregion
 
         #region GenericFileAggregatorModel 2 GenericModel
@@ -85,6 +89,7 @@ public class MappingProfile : Profile
             .ForMember(c => c.BackgroundPhoto, m => m.MapFrom(m => MapFileField(nameof(UserProfileContract.BackgroundPhoto), m)))
             .ForMember(c => c.CroppedProfilePhoto, m => m.MapFrom(m => MapFileField(nameof(UserProfileContract.CroppedProfilePhoto), m)))
             .ForMember(c => c.OriginalProfilePhoto, m => m.MapFrom(m => MapFileField(nameof(UserProfileContract.OriginalProfilePhoto), m)));
+        CreateMap<PagedDataModel<UserProfileGenericFileAggregatorModel>, PagedDataContract<UserProfileContract>>();
         #endregion
     }
 

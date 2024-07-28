@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using FitnessApp.Common.Abstractions.Controllers;
+using FitnessApp.Common.Paged.Contracts.Output;
 using FitnessApp.ProfileApi.Contracts.Input;
 using FitnessApp.ProfileApi.Contracts.Output;
 using FitnessApp.ProfileApi.Models.Input;
@@ -12,20 +13,20 @@ namespace FitnessApp.ProfileApi.Controllers;
 
 public class UserProfileController(IUserProfileAggregatorService userProfileAggregatorService, IMapper mapper) : FitnessAppBaseController
 {
-    [HttpPost("GetUserProfiles")]
-    public async Task<IEnumerable<UserProfileContract>> GetUserProfiles([FromBody]GetUserProfilesContract contract)
+    [HttpPost("FilterUserProfiles")]
+    public async Task<PagedDataContract<UserProfileContract>> FilterUserProfiles([FromBody]GetUserProfilesContract contract)
     {
-        var response = await userProfileAggregatorService.GetUsersProfiles(
-            contract.Search,
-            entity => true);
-        return mapper.Map<IEnumerable<UserProfileContract>>(response);
+        var model = mapper.Map<GetUserProfilesModel>(contract);
+        var response = await userProfileAggregatorService.FilterUserProfiles(model);
+        return mapper.Map<PagedDataContract<UserProfileContract>>(response);
     }
 
-    [HttpPost("GetUsersProfiles")]
-    public async Task<IEnumerable<UserProfileContract>> GetUsersProfiles([FromBody]GetUsersProfilesContract contract)
+    [HttpPost("GetUsersProfilesByIds")]
+    public async Task<PagedDataContract<UserProfileContract>> GetUsersProfilesByIds([FromBody]GetUsersProfilesByIdsContract contract)
     {
-        var response = await userProfileAggregatorService.GetUsersProfiles(contract.UsersIds);
-        return mapper.Map<IEnumerable<UserProfileContract>>(response);
+        var model = mapper.Map<GetUsersProfilesByIdsModel>(contract);
+        var response = await userProfileAggregatorService.GetUsersProfilesByIds(model);
+        return mapper.Map<PagedDataContract<UserProfileContract>>(response);
     }
 
     [HttpGet("GetUserProfile/{userId}")]

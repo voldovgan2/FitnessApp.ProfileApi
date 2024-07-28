@@ -1,6 +1,5 @@
-﻿namespace FitnessApp.ProfileApi.Contracts.Input;
+﻿using FitnessApp.Common.Paged.Contracts.Input;
 
-public class GetUserProfilesContract
-{
-    public string Search { get; set; }
-}
+namespace FitnessApp.ProfileApi.Contracts.Input;
+
+public class GetUserProfilesContract : GetPagedDataContract;
