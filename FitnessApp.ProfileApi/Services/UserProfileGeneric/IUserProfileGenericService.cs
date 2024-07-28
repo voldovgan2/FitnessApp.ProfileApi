@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FitnessApp.Common.Abstractions.Services.Generic;
+using FitnessApp.Common.Paged.Models.Output;
 using FitnessApp.ProfileApi.Models.Input;
 using FitnessApp.ProfileApi.Models.Output;
 
@@ -12,5 +12,5 @@ public interface IUserProfileGenericService :
         CreateUserProfileGenericModel,
         UpdateUserProfileGenericModel>
 {
-    Task<IEnumerable<UserProfileGenericModel>> FilterUserProfiles(GetUserProfilesModel model);
+    Task<PagedDataModel<UserProfileGenericModel>> FilterUserProfiles(GetUserProfilesModel model);
 }

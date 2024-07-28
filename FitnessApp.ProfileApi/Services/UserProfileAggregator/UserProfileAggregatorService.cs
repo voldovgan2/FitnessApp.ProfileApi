@@ -44,7 +44,7 @@ public class UserProfileAggregatorService(
     public async Task<PagedDataModel<UserProfileGenericFileAggregatorModel>> FilterUserProfiles(GetUserProfilesModel model)
     {
         var models = await userProfileService.FilterUserProfiles(model);
-        return (await LoadAndComposeGenericFileAggregatorModels(models)).ToPaged(model);
+        return (await LoadAndComposeGenericFileAggregatorModels(models.Items)).ToPaged(model);
     }
 
     public Task<UserProfileGenericFileAggregatorModel> CreateUserProfile(CreateUserProfileGenericFileAggregatorModel model)

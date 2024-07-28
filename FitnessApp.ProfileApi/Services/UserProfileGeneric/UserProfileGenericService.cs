@@ -1,21 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
 using FitnessApp.Common.Abstractions.Services.Generic;
+using FitnessApp.Common.Paged.Models.Output;
 using FitnessApp.ProfileApi.Data;
 using FitnessApp.ProfileApi.Models.Input;
 using FitnessApp.ProfileApi.Models.Output;
 
 namespace FitnessApp.ProfileApi.Services.UserProfileGeneric;
 
-public class UserProfileGenericService(IUserProfileRepository repository, IMapper mapper) :
+public class UserProfileGenericService(IUserProfileRepository repository) :
     GenericService<
         UserProfileGenericModel,
         CreateUserProfileGenericModel,
-        UpdateUserProfileGenericModel>(repository, mapper),
+        UpdateUserProfileGenericModel>(repository),
     IUserProfileGenericService
 {
-    public Task<IEnumerable<UserProfileGenericModel>> FilterUserProfiles(GetUserProfilesModel model)
+    public Task<PagedDataModel<UserProfileGenericModel>> FilterUserProfiles(GetUserProfilesModel model)
     {
         return repository.FilterUserProfiles(model);
     }

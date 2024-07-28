@@ -2,4 +2,4 @@
 
 namespace FitnessApp.ProfileApi.Models.Input;
 
-public class GetUserProfilesModel : GetPagedDataModel;
+public class GetUserProfilesModel : GetPagedSearchDataModel;
