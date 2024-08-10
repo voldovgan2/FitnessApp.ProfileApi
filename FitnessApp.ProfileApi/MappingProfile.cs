@@ -72,6 +72,7 @@ public class MappingProfile : Profile
 
         #region GenericEntity 2 GenericModel
         CreateMap<UserProfileGenericEntity, UserProfileGenericModel>();
+        CreateMap<PagedDataModel<UserProfileGenericEntity>, PagedDataModel<UserProfileGenericModel>>();
         #endregion
 
         #region GenericFileAggregatorModel 2 Contract

@@ -2,4 +2,4 @@
 
 namespace FitnessApp.ProfileApi.Contracts.Input;
 
-public class GetUserProfilesContract : GetPagedDataContract;
+public class GetUserProfilesContract : GetPagedSearchDataContract;

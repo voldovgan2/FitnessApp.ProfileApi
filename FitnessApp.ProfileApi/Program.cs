@@ -1,5 +1,8 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using FitnessApp.Common.Configuration;
+using FitnessApp.Common.Files;
+using FitnessApp.Common.Vault;
 using FitnessApp.ProfileApi;
 using FitnessApp.ProfileApi.DependencyInjection;
 using FitnessApp.ProfileApi.Extensions;
@@ -17,7 +20,7 @@ builder.Services.ConfigureMapper(new MappingProfile());
 builder.Services.ConfigureMongo(builder.Configuration);
 builder.Services.ConfigureVault(builder.Configuration);
 builder.Services.ConfigureUserProfileRepository();
-builder.Services.ConfigureFilesService(builder.Configuration);
+builder.Services.ConfigureFilesService2(builder.Configuration);
 builder.Services.ConfigureNats(builder.Configuration);
 builder.Services.AddUserProfileMessageTopicSubscribersService();
 builder.Services.ConfigureAuthentication(builder.Configuration);
@@ -27,6 +30,7 @@ if ("false".Contains("true"))
     builder.Services.AddHostedService<UserProfileMessageTopicSubscribersService>();
 
 builder.Host.ConfigureAppConfiguration();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -42,6 +46,8 @@ else
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
+app.MapControllers(); 
+app.MapHealthChecks("/health");
 app.Run();
+
 public partial class Program { }
