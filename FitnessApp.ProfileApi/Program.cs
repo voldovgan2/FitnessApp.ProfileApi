@@ -1,8 +1,5 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using FitnessApp.Common.Configuration;
-using FitnessApp.Common.Files;
-using FitnessApp.Common.Vault;
 using FitnessApp.ProfileApi;
 using FitnessApp.ProfileApi.DependencyInjection;
 using FitnessApp.ProfileApi.Extensions;
@@ -46,7 +43,7 @@ else
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers(); 
+app.MapControllers();
 app.MapHealthChecks("/health");
 app.Run();
 
